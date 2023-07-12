@@ -2,3 +2,7 @@
 ssllabs-scan
 ssllabs-scan-v3
 local-test-*.txt
+.gitignore
+test
+.vscode
+json2xml
