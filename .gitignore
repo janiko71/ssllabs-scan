@@ -5,4 +5,4 @@ local-test-*.txt
 .gitignore
 test
 .vscode
-json2xml
+*.mod
