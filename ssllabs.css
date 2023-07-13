@@ -1,0 +1,71 @@
+/*
+ * CSS by Janiko
+*/
+
+
+html > body { 
+	font-family: PT Sans, Roboto,Candara, Calibri, sans-serif;
+  font-size: 11px;
+}
+
+.red { color: red; }
+.green { color:ForestGreen; }
+.purple { color:purple; }
+.yellow { color:olive; }
+.inline { 
+  display: -moz-inline-box; 
+  display: inline-block; 
+}
+.col-250 { width:250px; }
+.col-700 { width:700px; }
+.table_certif { text-align:left; }
+.table_algos { text-align:left; }
+th { text-align:left; }
+
+table {
+  font-size: 1em;
+}
+
+h1 {
+  font-size: 2.4em;
+  color:chocolate;
+}
+
+h2 {
+  font-size: 2em;
+  color:chocolate;
+}
+
+h3 {
+  font-size: 1.8em;
+  color:chocolate;
+}
+
+h4 {
+  font-size: 1.4em;
+  color:chocolate;
+}
+
+h5 {
+  font-size: 1.2em;
+  color:chocolate;
+}
+
+h6 {
+  font-size: 1.05em;
+  color:chocolate;
+}
+
+p {
+  font-size: 1em;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+tr th {
+  font-size: 1.1em;
+}
+
+tr td {
+  font-size: 1em;
+}

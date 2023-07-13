@@ -1061,6 +1061,7 @@ func ConvertJSONtoXML(report LabsReport) error {
 	defer xmlFile.Close()
 
 	xmlFile.Write([]byte(xml.Header))
+	xmlFile.Write([]byte(`<?xml-stylesheet type="text/xsl" href="ssllabs.xsl"?>` + "\n"))
 	xmlFile.Write(xmlData)
 
 	return nil
