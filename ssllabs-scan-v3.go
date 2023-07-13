@@ -254,7 +254,12 @@ type LabsHstsPolicy struct {
 	MaxAge            int64
 	IncludeSubDomains bool
 	Preload           bool
-	//Directives        map[string]string
+	Directives        LabsHstsPolicyDirective
+}
+
+type LabsHstsPolicyDirective struct {
+	Name  string
+	Value string
 }
 
 type LabsHstsPreload struct {
@@ -1035,44 +1040,21 @@ func validateHostname(hostname string) bool {
 	}
 }
 
-func ConvertJSONtoXML(inputFile, outputFile string) error {
-
-	var cheminTest = "test"
-	var SSLdata []LabsReport
-
-	// Lire le fichier JSON en entrée
-	var fileIn = filepath.Join(cheminTest, "geba_fr.json")
-	var fileOut = filepath.Join(cheminTest, "geba_fr.xml")
-	jsonFile, err := os.Open(fileIn)
-	// jsonFile, err := os.Open(cheminTest + os.PathSeparator + inputFile)
-	if err != nil {
-		return fmt.Errorf("erreur lors de l'ouverture du fichier JSON: %v", err)
-	}
-	defer jsonFile.Close()
-	fmt.Println("Fin lecture")
-
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-
-	// Déclarer une structure générique pour le JSON
-
-	// Convertir le JSON en structure Go
-	err = json.Unmarshal(byteValue, &SSLdata)
-	if err != nil {
-		return fmt.Errorf("erreur lors de la conversion JSON en structure Go: %v", err)
-	}
-
-	fmt.Println("Fin unmarshalling")
-	// SSLdata[0].Endpoints[0].Details.HstsPolicy.Directives := [""]
-	fmt.Println(SSLdata)
+func ConvertJSONtoXML(report LabsReport) error {
 
 	// Convertir la structure Go en XML
-	xmlData, err := xml.MarshalIndent(SSLdata, "", "    ")
-	if err != nil {
-		return fmt.Errorf("erreur lors de la conversion en XML: %v", err)
+	xmlData, err := xml.MarshalIndent(report, "", "    ")
+	if logLevel >= LOG_NOTICE {
+		if err == nil {
+			log.Println("[NOTICE] XML conversion OK")
+		} else {
+			log.Println("[WARNING] XML conversion error: %v", err)
+		}
 	}
 
 	// Écrire le résultat XML dans un fichier
-	xmlFile, err := os.Create(fileOut)
+	var xmlFilename string = strings.Replace(report.Host, ".", "_", -1) + ".xml"
+	xmlFile, err := os.Create(filepath.Join("test", xmlFilename))
 	if err != nil {
 		return fmt.Errorf("erreur lors de la création du fichier XML: %v", err)
 	}
@@ -1097,22 +1079,6 @@ func main() {
 	var conf_maxage = flag.Int("maxage", 0, "Maximum acceptable age of cached results, in hours. A zero value is ignored.")
 	var conf_verbosity = flag.String("verbosity", "info", "Configure log verbosity: error, notice, info, debug, or trace.")
 	var conf_version = flag.Bool("version", false, "Print version and API location information and exit")
-
-	/*
-	 * Jeannoooooooooooooooooooooooooooot
-	 */
-
-	err := ConvertJSONtoXML("geba_fr.json", "geba_fr.xml")
-	if err != nil {
-		fmt.Println("Erreur lors de la conversion :", err)
-		return
-	}
-
-	fmt.Println("JSON --> XML conversion OK.")
-
-	/*
-	 * Fin Jeannooooooooooooooooooooooooooooot
-	 */
 
 	flag.Parse()
 
@@ -1255,8 +1221,26 @@ func main() {
 			if logLevel >= LOG_INFO {
 				log.Println("[INFO] All assessments complete; shutting down")
 			}
+			/*
+			* Jeannoooooooooooooooooooooooooooot
+			 */
+			//(*(*manager).results).reports[0]
+			fmt.Println(manager.results.reports[0].rawJSON)
+			var k int
+			var report LabsReport
+			for k, report = range manager.results.reports {
+				fmt.Println(k, report)
+				cnv_err := ConvertJSONtoXML(report)
+				if cnv_err != nil {
+					fmt.Println("Erreur lors de la conversion :", cnv_err)
+				}
+			}
 
+			/*
+			* Fin Jeannooooooooooooooooooooooooooooot
+			 */
 			return
 		}
 	}
+
 }
