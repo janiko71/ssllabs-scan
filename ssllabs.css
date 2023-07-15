@@ -6,6 +6,7 @@
 html > body { 
 	font-family: PT Sans, Roboto,Candara, Calibri, sans-serif;
   font-size: 11px;
+  width: 100%;
 }
 
 .red { color: red; }
@@ -24,7 +25,7 @@ th { text-align:left; }
 
 table {
   font-size: 1em;
-}
+  width: 100%;}
 
 h1 {
   font-size: 2.4em;
@@ -64,8 +65,21 @@ p {
 
 tr th {
   font-size: 1.1em;
+  vertical-align: top;
 }
 
 tr td {
   font-size: 1em;
+}
+td.endpoint_header_level1, td.endpoint_header_level2, td.endpoint_header_level3, td.endpoint_header_level4, td.endpoint_header_level5 {
+  width:80px;
+}
+
+td.endpoint_header {
+  vertical-align: top;
+  font-weight: bold;
+}
+
+level1 {
+  width: 80%
 }

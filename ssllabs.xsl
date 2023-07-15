@@ -2,97 +2,128 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="html" indent="yes"/>
 
-  <!-- Déclaration des traductions -->
-  <xsl:param name="lang" select="'fr'" /> 
-  <!-- Langue par défaut -->
-  <xsl:param name="labels">
-    <translations>
-      <translation lang="fr" field="Host">Hôte</translation>
-      <translation lang="fr" field="Port">Port</translation>
-      <translation lang="fr" field="Protocol">Protocole</translation>
-      <translation lang="fr" field="IsPublic">Public</translation>
-      <!-- Ajoutez d'autres traductions ici -->
-    </translations>
-  </xsl:param>
+<!-- format-date(function name) (inpvalue, 'MMM dd, yyyy')-->
 
   <!-- Template principal -->
   <xsl:template match="/">
     <html>
       <head>
-        <title>Rapport de laboratoire</title>
+        <title>Rapport SSL</title>
         <link href="./ssllabs.css" rel="stylesheet" type="text/css" />
         <!-- If you want your own Google Font...-->
         <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
       </head>
       <body>
-        <h1>Rapport de laboratoire</h1>
-        <xsl:apply-templates select="LabsReport/*" />
+        <h1>Rapport SSL</h1>
+        <table class="full_table">
+          <xsl:apply-templates select="LabsReport/*" />
+        </table>
       </body>
     </html>
   </xsl:template>
-
   
+  <!---
+              ENDPOINTS
+  -->  
+
   <!-- Template pour les Endpoints -->
   <xsl:template match="Endpoints">
-    <h2>Endpoints</h2>    
-    <xsl:apply-templates />
+    <table>
+      <xsl:apply-templates />
+    </table>
   </xsl:template>
 
-  <!-- Template pour Details -->
-  <xsl:template match="Details">
-    <h3>Details</h3>    
-    <xsl:apply-templates />
+  <!--Template pour les Endpoints (détails) -->
+  <xsl:template match="Endpoints/Details/Suites/List/*">
+    <tr>
+      <th></th>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td class="endpoint_header_level5">(b6s)<xsl:value-of select="name()" /></td>
+      <td class="endpoint_content_level5" colspan="2">(b7s)<xsl:apply-templates /></td>
+    </tr>
+  </xsl:template> 
+
+  <!--Template pour les Endpoints (détails) -->
+  <xsl:template match="Endpoints/Details/Suites/*|Endpoints/Details/NamedGroups/*|Endpoints/Details/Protocols/*|Endpoints/Details/CertChains/*|Endpoints/Details/NoSniSuites/*|Endpoints/Details/Sims/*">
+    <tr>
+      <th></th>
+      <td></td>
+      <td>(b8n)</td>
+      <td class="endpoint_header_level4">(b8s)<xsl:value-of select="name()" /></td>
+      <td class="endpoint_content_level4" colspan="3">(b9s)<xsl:apply-templates /></td>
+    </tr>
+  </xsl:template> 
+
+  <!--Template pour les Endpoints (détails) -->
+  <xsl:template match="Endpoints/Details/HstsPolicy/*|Endpoints/Details/HstsPreloads/*|Endpoints/Details/HpkpPolicy/*|Endpoints/Details/HpkpRoPolicy/*|Endpoints/Details/HttpTransactions/*">
+    <tr>
+      <th></th>
+      <td></td>
+      <td>(b8n)</td>
+      <td class="endpoint_header_level4">(b8s)<xsl:value-of select="name()" /></td>
+      <td class="endpoint_content_level4" colspan="3">(b9s)<xsl:apply-templates /></td>
+    </tr>
+  </xsl:template> 
+
+  <!--Template pour les Endpoints (détails) -->
+  <xsl:template match="Endpoints/Details/*">
+    <tr>
+      <th></th>
+      <td></td>
+      <td class="endpoint_header_level3">(b6)<xsl:value-of select="name()" /></td>
+      <td class="endpoint_content_level3" colspan="4">(b7)<xsl:apply-templates /></td>
+    </tr>
   </xsl:template>  
 
-  <!-- Template pour Suites/List -->
-  <xsl:template match="Sims/Results/Client">
-    <p>Sims/Results/Client <xsl:value-of select="." /></p>    
-    <xsl:apply-templates />
-  </xsl:template>
+  <!--Template pour les Endpoints (détails) -->
+  <xsl:template match="Endpoints/*">
+    <tr>
+      <th></th>
+      <td class="endpoint_header_level2">(b4)<xsl:value-of select="name()" /></td>
+      <td class="endpoint_content_level2" colspan="4">(b5)<xsl:apply-templates /></td>
+    </tr>
+  </xsl:template>  
+ 
 
-  <!-- Template pour Suites/List -->
-  <xsl:template match="Suites/List|Sims/Results">
-    <h5><xsl:value-of select="name()" /></h5>    
-    <xsl:apply-templates />
-  </xsl:template>      
-
-  <!-- Template pour Suites -->
-  <xsl:template match="Suites|Protocols|NamedGroups|CertChains|NoSniSuites|NamedGroups|Sims|HstsPolicy|HstsPreloads|HpkpPolicy|HpkpRoPolicy|HttpTransactions">
-    <h4><xsl:value-of select="name()" /></h4>    
-    <xsl:apply-templates />
-  </xsl:template> 
-
-  <!-- Template pour Suites -->
-  <xsl:template match="Suites">
-    <h4>Suites</h4>    
-    <xsl:apply-templates />
-  </xsl:template> 
-
-  <!-- Template pour Suites -->
-  <xsl:template match="Suites">
-    <h4>Suites</h4>    
-    <xsl:apply-templates />
-  </xsl:template>   
-
-
+  <!---
+              CERTS
+  -->  
 
   <!-- Template pour les Certs -->
   <xsl:template match="Certs">
-    <h2>Certs</h2>    
-    <xsl:apply-templates />
+    <table>
+      <xsl:apply-templates />
+    </table>
+  </xsl:template>
+
+  <!--Template pour les Certs (détails) -->
+  <xsl:template match="Certs/*">
+    <tr>
+      <th></th>
+      <td class="endpoint_header_level2">(b10)<xsl:value-of select="name()" /></td>
+      <td class="endpoint_content_level2" colspan="4">(b11)<xsl:value-of select="." /></td>
+    </tr>
   </xsl:template>
 
 
 
   <!-- Template pour les champs -->
-  <xsl:template match="*">
+  <xsl:template match="LabsReport/*">
     <xsl:choose>
       <xsl:when test="not(normalize-space(.))">
         <!-- Empty value, not displayed -->
-        <p><b><xsl:value-of select="name()" /></b><xsl:text> : </xsl:text><i>vide</i></p>
+        <tr>
+          <th>(b1)<xsl:value-of select="name()" /></th>
+          <td><i>vide</i></td>
+        </tr>
       </xsl:when>
       <xsl:otherwise>
-        <p><b><xsl:value-of select="name()" /></b><xsl:text> : </xsl:text><xsl:value-of select="." /></p>
+        <tr>
+          <th>(b2)<xsl:value-of select="name()" /></th>
+          <td class="level1" colspan="5">(b3)<xsl:apply-templates /></td>
+        </tr>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
