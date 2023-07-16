@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translations>
+  <translation lang="fr" field="Host">Hôte</translation>
+  <translation lang="fr" field="Port">Port</translation>
+  <translation lang="fr" field="Protocol">Protocole</translation>
+  <translation lang="fr" field="IsPublic">Public</translation>
+  <!-- Ajoutez d'autres traductions ici -->
+</translations>
