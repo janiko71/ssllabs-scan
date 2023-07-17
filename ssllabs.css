@@ -27,9 +27,18 @@ table {
   font-size: 1em;
   width: 100%;}
 
+
+.table_header {
+  font-size: 2em;
+  color:chocolate;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
 h1 {
   font-size: 2.4em;
   color:chocolate;
+  border-bottom: 1px solid chocolate;
 }
 
 h2 {
@@ -66,20 +75,52 @@ p {
 tr th {
   font-size: 1.1em;
   vertical-align: top;
+  width: 250px;
 }
 
-tr td {
+tr td, td {
   font-size: 1em;
-}
-td.endpoint_header_level1, td.endpoint_header_level2, td.endpoint_header_level3, td.endpoint_header_level4, td.endpoint_header_level5 {
-  width:80px;
-}
-
-td.endpoint_header {
   vertical-align: top;
-  font-weight: bold;
 }
 
 level1 {
   width: 80%
+}
+
+.accepted_suites {
+    width:80%;
+}
+
+.named_group {
+    color: green;
+}
+
+.accepted_suites_name {
+    color: green;
+}
+
+.simulation_header, .endpoint_detail_header, .certificates_header, .protocols_header {
+    font-size: 1.4em;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color:chocolate;
+}
+
+.certificate_header_CN {
+    font-size: 1.4em;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color:chocolate;
+}
+
+.simulation_OS {
+    font-weight: normal;
+}
+
+.content_name {
+    color: DarkGray;
+}
+
+.content_value {
+    color: black;
 }
