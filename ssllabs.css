@@ -124,3 +124,7 @@ level1 {
 .content_value {
     color: black;
 }
+
+.content_light_error {
+    color: MistyRose;
+}

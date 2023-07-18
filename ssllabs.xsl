@@ -6,45 +6,37 @@
 
 
   <!-- Date conversion template -->
-  <xsl:template name="convertSecondsToDate">
-    <xsl:param name="milliSeconds" select="0"/>
-    <xsl:variable name="secondsInt" select="floor($milliSeconds div 1000)"/>
+    <xsl:template name="UnixTime-to-dateTime">
+    	<xsl:param name="unixTime"/>
+    	
+    	<xsl:variable name="JDN" select="floor($unixTime div 86400000) + 2440588" />
+    	<xsl:variable name="secs" select="$unixTime mod 86400" />	
+    	
+    	<xsl:variable name="f" select="$JDN + 1401 + floor((floor((4 * $JDN + 274277) div 146097) * 3) div 4) - 38"/>
+    	<xsl:variable name="e" select="4*$f + 3"/>
+    	<xsl:variable name="g" select="floor(($e mod 1461) div 4)"/>
+    	<xsl:variable name="h" select="5*$g + 2"/>
     
-    <xsl:variable name="secondsPerDay" select="86400"/>
-    <xsl:variable name="secondsPerHour" select="3600"/>
-    <xsl:variable name="secondsPerMinute" select="60"/>
+    	<xsl:variable name="d" select="floor(($h mod 153) div 5 ) + 1"/>
+    	<xsl:variable name="m" select="(floor($h div 153) + 2) mod 12 + 1"/>
+    	<xsl:variable name="y" select="floor($e div 1461) - 4716 + floor((14 - $m) div 12)"/>
     
-    <xsl:variable name="days" select="floor($secondsInt div $secondsPerDay)"/>
-    <xsl:variable name="remainingSeconds1" select="$secondsInt mod $secondsPerDay"/>
+    	<xsl:variable name="H" select="floor($secs div 3600)"/>
+    	<xsl:variable name="M" select="floor($secs mod 3600 div 60)"/>
+    	<xsl:variable name="S" select="$secs mod 60"/>
     
-    <xsl:variable name="hours" select="floor($remainingSeconds1 div $secondsPerHour)"/>
-    <xsl:variable name="remainingSeconds2" select="$remainingSeconds1 mod $secondsPerHour"/>
-    
-    <xsl:variable name="minutes" select="floor($remainingSeconds2 div $secondsPerMinute)"/>
-    <xsl:variable name="seconds" select="$remainingSeconds2 mod $secondsPerMinute"/>
-    
-    <!-- Replace '1970-01-01T00:00:00' with the specific date corresponding to your integer -->
-    <xsl:call-template name="convertDaysToDate">
-      <xsl:with-param name="days" select="$days"/>
-    </xsl:call-template> / 
-    <xsl:value-of select="concat(format-number($hours, '00'), ':', format-number($minutes, '00'), ':', format-number($seconds, '00'))"/>
-  </xsl:template>    
-
-  <!-- Date conversion template -->
-  <xsl:template name="convertDaysToDate">
-    <xsl:param name="days" select="0"/>
-    <!-- Replace '1970-01-01' with your reference date -->
-    <xsl:variable name="referenceDate" select="'1970-01-01'"/>
-    <!-- Calculate the target date -->
-    <xsl:variable name="targetYear" select="substring($referenceDate, 1, 4) + floor($days div 365)"/>
-    <xsl:variable name="leapYears" select="floor($targetYear div 4) - floor($targetYear div 100) + floor($targetYear div 400)"/>
-    <xsl:variable name="daysSinceReference" select="$days - ($targetYear - substring($referenceDate, 1, 4)) * 365 - $leapYears"/>
-    <xsl:variable name="monthDays" select="30 + ($targetYear mod 4 = 0 and ($targetYear mod 100 != 0 or $targetYear mod 400 = 0))"/>
-    <xsl:variable name="targetMonth" select="1 + floor(($daysSinceReference - 1) div $monthDays)"/>
-    <xsl:variable name="targetDay" select="$daysSinceReference - floor(($daysSinceReference - 1) div $monthDays) * $monthDays"/>
-    <!-- Format the target date -->
-    <xsl:value-of select="concat($targetYear, '-', format-number($targetMonth, '00'), '-', format-number($targetDay, '00'))"/>
-  </xsl:template>
+    	<xsl:value-of select="$y"/>
+    	<xsl:text>-</xsl:text>
+    	<xsl:value-of select="format-number($m, '00')"/>
+    	<xsl:text>-</xsl:text>
+    	<xsl:value-of select="format-number($d, '00')"/>
+    	<xsl:text>T</xsl:text>
+    	<xsl:value-of select="format-number($H, '00')"/>
+    	<xsl:text>:</xsl:text>
+    	<xsl:value-of select="format-number($M, '00')"/>
+    	<xsl:text>:</xsl:text>
+    	<xsl:value-of select="format-number($S, '00')"/>
+    </xsl:template>
   
   
     <!-- Template principal -->
@@ -70,15 +62,14 @@
                     </tr>
                     
                     <xsl:for-each select="LabsReport/*[.]">
-                        <!-- format-date(function name) (inpvalue, 'MMM dd, yyyy') -->
                         <xsl:choose>
-                            <xsl:when test="name()='StartTime'">
+                            <xsl:when test="(name()='StartTime') or (name()='TestTime')">
                                 <!-- Singleton -->
                                 <tr>
                                     <th><xsl:value-of select="name()" /></th>
                                     <td colspan="2">
-                                        <xsl:call-template name="convertSecondsToDate">
-                                          <xsl:with-param name="milliSeconds" select="."/>
+                                        <xsl:call-template name="UnixTime-to-dateTime">
+                                          <xsl:with-param name="unixTime" select="."/>
                                         </xsl:call-template>                                    
                                     </td>
                                 </tr>
@@ -238,7 +229,7 @@
                                             &#160;<span class="content_name">SigAlg : </span><span class="content_value"><xsl:value-of select="SigAlg" /></span>
                                         </xsl:when>
                                         <xsl:otherwise>
-                                            <xsl:value-of select="ErrorMessage" />
+                                            <span class="content_light_error"><xsl:value-of select="ErrorMessage" /></span>
                                         </xsl:otherwise>
                                     </xsl:choose>
                                     </td>
@@ -278,12 +269,30 @@
                             <xsl:choose>
                                 <xsl:when test="not(./*)">
                                     <!-- Singleton -->
+                                    <xsl:choose>
+                                        <xsl:when test="(name()='NotBefore') or (name()='NotAfter')">
+                                            <tr>
+                                                <th><xsl:value-of select="name()" /></th>
+                                                <td colspan="2">
+                                                    <xsl:call-template name="UnixTime-to-dateTime">
+                                                      <xsl:with-param name="unixTime" select="."/>
+                                                    </xsl:call-template>                                    
+                                                </td>
+                                            </tr>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <tr>
+                                                <th><xsl:value-of select="name()" /></th>
+                                                <td colspan="2"><xsl:value-of select="." /></td>
+                                            </tr>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:when>
+                                <xsl:otherwise>
                                     <tr>
                                         <th><xsl:value-of select="name()" /></th>
                                         <td colspan="2"><xsl:value-of select="." /></td>
                                     </tr>
-                                </xsl:when>
-                                <xsl:otherwise>
                                 </xsl:otherwise>
                             </xsl:choose>
                         </xsl:for-each>
