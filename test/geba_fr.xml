@@ -7,8 +7,8 @@
     <IsPublic>false</IsPublic>
     <Status>READY</Status>
     <StatusMessage></StatusMessage>
-    <StartTime>1689269882708</StartTime>
-    <TestTime>1689270019178</TestTime>
+    <StartTime>1689685704693</StartTime>
+    <TestTime>1689685782306</TestTime>
     <EngineVersion>2.1.10</EngineVersion>
     <CriteriaVersion>2009q</CriteriaVersion>
     <CacheExpiryTime>0</CacheExpiryTime>
@@ -23,11 +23,11 @@
         <HasWarnings>false</HasWarnings>
         <IsExceptional>false</IsExceptional>
         <Progress>100</Progress>
-        <Duration>136113</Duration>
+        <Duration>77066</Duration>
         <Eta>0</Eta>
         <Delegation>1</Delegation>
         <Details>
-            <HostStartTime>1689269882708</HostStartTime>
+            <HostStartTime>1689685704693</HostStartTime>
             <CertChains>
                 <Id>365e88c8516b3fac5fe494ee0e902b2d581f1095b612813af4bc9d6b21774fe0</Id>
                 <CertIds>b7ed0395b00b6040ee28c22562236a0d42875aad5f20f89e32e30bd3bb6aacbe</CertIds>
@@ -2198,21 +2198,21 @@
                 <HostName>geba.fr</HostName>
                 <Status>absent</Status>
                 <Error></Error>
-                <SourceTime>1689268142414</SourceTime>
+                <SourceTime>1689685022660</SourceTime>
             </HstsPreloads>
             <HstsPreloads>
                 <Source>Firefox</Source>
                 <HostName>geba.fr</HostName>
                 <Status>absent</Status>
                 <Error></Error>
-                <SourceTime>1689268142414</SourceTime>
+                <SourceTime>1689685022660</SourceTime>
             </HstsPreloads>
             <HstsPreloads>
                 <Source>IE</Source>
                 <HostName>geba.fr</HostName>
                 <Status>absent</Status>
                 <Error></Error>
-                <SourceTime>1689268142414</SourceTime>
+                <SourceTime>1689685022660</SourceTime>
             </HstsPreloads>
             <HpkpPolicy>
                 <Header></Header>

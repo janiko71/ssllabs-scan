@@ -29,6 +29,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -1040,7 +1041,68 @@ func validateHostname(hostname string) bool {
 	}
 }
 
-func ConvertJSONtoXML(report LabsReport) error {
+func copyFile(source, destination string) error {
+	// Ouvrir le fichier source en lecture
+	srcFile, err := os.Open(source)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+
+	// Créer le fichier destination
+	dstFile, err := os.Create(destination)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	// Copier le contenu du fichier source vers le fichier destination
+	_, err = io.Copy(dstFile, srcFile)
+	if err != nil {
+		return err
+	}
+
+	// Vérifier que tout le contenu a bien été écrit sur le disque
+	err = dstFile.Sync()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func XMLDirectoryCreation(dirResults string) {
+
+	_, err := os.Stat(dirResults)
+	if os.IsNotExist(err) {
+		// non-existant directory
+		err := os.Mkdir(dirResults, os.ModePerm)
+		if err != nil {
+			log.Printf("[WARNING] Error while creating directory '%s': %s\n", dirResults, err)
+		} else {
+			log.Printf("[INFO] Directory '%s' successfully created.\n", dirResults)
+		}
+	} else if err != nil {
+		log.Printf("[WARNING] Error while verifying directory '%s': %s\n", dirResults, err)
+	} else {
+		log.Printf("[INFO] Directory '%s' already created.\n", dirResults)
+	}
+	// Copying formatting files
+	if err := copyFile("ssllabs.xsl", filepath.Join(dirResults, "ssllabs.xsl")); err != nil {
+		log.Printf("[INFO] Error while copying ssllabs.xsl:", err)
+		return
+	}
+	if err := copyFile("ssllabs.css", filepath.Join(dirResults, "ssllabs.css")); err != nil {
+		log.Printf("[INFO] Error while copying ssllabs.css:", err)
+		return
+	}
+	if err := copyFile("ssllabs_globals.xml", filepath.Join(dirResults, "ssllabs_globals.xml")); err != nil {
+		log.Printf("[INFO] Error while copying ssllabs_globals.xml:", err)
+		return
+	}
+}
+
+func ConvertJSONtoXML(report LabsReport, dirResults string) error {
 
 	// Convertir la structure Go en XML
 	xmlData, err := xml.MarshalIndent(report, "", "    ")
@@ -1054,7 +1116,7 @@ func ConvertJSONtoXML(report LabsReport) error {
 
 	// Écrire le résultat XML dans un fichier
 	var xmlFilename string = strings.Replace(report.Host, ".", "_", -1) + ".xml"
-	xmlFile, err := os.Create(filepath.Join("test", xmlFilename))
+	xmlFile, err := os.Create(filepath.Join(dirResults, xmlFilename))
 	if err != nil {
 		return fmt.Errorf("erreur lors de la création du fichier XML: %v", err)
 	}
@@ -1075,6 +1137,8 @@ func main() {
 	var conf_ignore_mismatch = flag.Bool("ignore-mismatch", false, "If true, certificate hostname mismatch does not stop assessment.")
 	var conf_insecure = flag.Bool("insecure", false, "Skip certificate validation. For use in development only. Do not use.")
 	var conf_json_flat = flag.Bool("json-flat", false, "Output results in flattened JSON format")
+	var conf_xml = flag.Bool("xml", false, "Output results in one XML file per hostname, with XSLT formatting")
+	var conf_xml_path = flag.String("xml-path", "results", "Path for writing XML outputs")
 	var conf_quiet = flag.Bool("quiet", false, "Disable status messages (logging)")
 	var conf_usecache = flag.Bool("usecache", false, "If true, accept cached results (if available), else force live scan.")
 	var conf_maxage = flag.Int("maxage", 0, "Maximum acceptable age of cached results, in hours. A zero value is ignored.")
@@ -1225,15 +1289,17 @@ func main() {
 			/*
 			* Jeannoooooooooooooooooooooooooooot
 			 */
-			//(*(*manager).results).reports[0]
-			fmt.Println(manager.results.reports[0].rawJSON)
-			var k int
-			var report LabsReport
-			for k, report = range manager.results.reports {
-				fmt.Println(k, report)
-				cnv_err := ConvertJSONtoXML(report)
-				if cnv_err != nil {
-					fmt.Println("Erreur lors de la conversion :", cnv_err)
+			if *conf_xml {
+				// Utilisez os.Stat pour vérifier si le répertoire existe.
+				XMLDirectoryCreation(*conf_xml_path)
+				//fmt.Println(manager.results.reports[0].rawJSON)
+				var report LabsReport
+				for _, report = range manager.results.reports {
+					//fmt.Println(k, report)
+					cnv_err := ConvertJSONtoXML(report, *conf_xml_path)
+					if cnv_err != nil {
+						log.Fatalf("[ERROR] ConvertJSONtoXML error:", cnv_err)
+					}
 				}
 			}
 

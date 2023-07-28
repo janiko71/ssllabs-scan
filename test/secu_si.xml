@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="ssllabs.xsl"?><LabsReport>
+<?xml-stylesheet type="text/xsl" href="ssllabs.xsl"?>
+<LabsReport>
     <Host>secu.si</Host>
     <Port>443</Port>
     <Protocol>http</Protocol>
     <IsPublic>false</IsPublic>
     <Status>READY</Status>
     <StatusMessage></StatusMessage>
-    <StartTime>1689269883830</StartTime>
-    <TestTime>1689270020909</TestTime>
+    <StartTime>1689681513670</StartTime>
+    <TestTime>1689681603341</TestTime>
     <EngineVersion>2.1.10</EngineVersion>
     <CriteriaVersion>2009q</CriteriaVersion>
     <CacheExpiryTime>0</CacheExpiryTime>
@@ -22,11 +23,11 @@
         <HasWarnings>false</HasWarnings>
         <IsExceptional>false</IsExceptional>
         <Progress>100</Progress>
-        <Duration>136704</Duration>
+        <Duration>84323</Duration>
         <Eta>0</Eta>
         <Delegation>1</Delegation>
         <Details>
-            <HostStartTime>1689269883830</HostStartTime>
+            <HostStartTime>1689681513670</HostStartTime>
             <CertChains>
                 <Id>a8c08f91fb85607e018d63e073180476276dd27ee9a1afd53185d1f795f68f8c</Id>
                 <CertIds>3c106cd5878489acc800c56e593ea4bb2a915e0079d519c9189261e8b45e7e11</CertIds>
@@ -2197,21 +2198,21 @@
                 <HostName>secu.si</HostName>
                 <Status>absent</Status>
                 <Error></Error>
-                <SourceTime>1689268142414</SourceTime>
+                <SourceTime>1689681366375</SourceTime>
             </HstsPreloads>
             <HstsPreloads>
                 <Source>Firefox</Source>
                 <HostName>secu.si</HostName>
                 <Status>absent</Status>
                 <Error></Error>
-                <SourceTime>1689268142414</SourceTime>
+                <SourceTime>1689681366375</SourceTime>
             </HstsPreloads>
             <HstsPreloads>
                 <Source>IE</Source>
                 <HostName>secu.si</HostName>
                 <Status>absent</Status>
                 <Error></Error>
-                <SourceTime>1689268142414</SourceTime>
+                <SourceTime>1689681366375</SourceTime>
             </HstsPreloads>
             <HpkpPolicy>
                 <Header></Header>

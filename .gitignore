@@ -4,5 +4,6 @@ ssllabs-scan-v3
 local-test-*.txt
 .gitignore
 test
+results
 .vscode
 *.mod

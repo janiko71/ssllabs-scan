@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+    <xsl:variable name="grades" select="document('ssllabs_globals.xml')"/>
+
     <xsl:output method="html" indent="yes"/>
 
 
@@ -9,8 +11,9 @@
     <xsl:template name="UnixTime-to-dateTime">
     	<xsl:param name="unixTime"/>
     	
-    	<xsl:variable name="JDN" select="floor($unixTime div 86400000) + 2440588" />
-    	<xsl:variable name="secs" select="$unixTime mod 86400" />	
+    	<xsl:variable name="UnixTimeSec" select="floor($unixTime div 1000)" />
+    	<xsl:variable name="JDN" select="floor($UnixTimeSec div 86400) + 2440588" />
+    	<xsl:variable name="secs" select="$UnixTimeSec mod 86400" />	
     	
     	<xsl:variable name="f" select="$JDN + 1401 + floor((floor((4 * $JDN + 274277) div 146097) * 3) div 4) - 38"/>
     	<xsl:variable name="e" select="4*$f + 3"/>
@@ -45,13 +48,13 @@
         <html>
         
             <head>
-                <title>Rapport SSL</title>
+                <title>Rapport SSL - <xsl:value-of select="LabsReport/Host" /></title>
                 <link href="ssllabs.css" rel="stylesheet" type="text/css" />
             </head>
             
             <body>
             
-                <h1>Rapport SSL*</h1>
+                <h1>Rapport SSL - <xsl:value-of select="LabsReport/Host" /></h1>
                 
                 
                 <table class="full_table">
@@ -89,12 +92,75 @@
                     <!--h2>Endpoints</h2-->
                     
                     <tr>
-                        <th class="table_header" colspan="2">Endpoints information</th><td></td>
+                        <th class="table_header" colspan="2">Endpoints information*</th><td></td>
                     </tr>
                     
                     <!-- Endpoints Information -->
                     <xsl:for-each select="LabsReport/Endpoints/*[.]">
                         <xsl:choose>
+                            <xsl:when test="name()='Grade'">
+                                <!-- Grade!! -->
+                                <xsl:variable name="current_grade" select="." />
+                                <tr>
+                                    <th><xsl:value-of select="name()" /></th>
+                                    <td>
+                                        <table class="table_grade">
+                                            <tr class="tr_grade">
+                                            <xsl:for-each select="$grades/ListGrades/*">
+                                                <xsl:if test='$current_grade=letter'>
+                                                    <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
+                                                </xsl:if>
+                                                <xsl:if test='$current_grade!=letter'>
+                                                    <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
+                                                </xsl:if>
+                                            </xsl:for-each>
+                                            </tr >
+                                        </table>
+                                    </td>
+                                </tr>
+                            </xsl:when>
+                            <xsl:when test="name()='GradeTrustIgnored'">
+                                <xsl:variable name="untrusted_grade" select="." />
+                                <!-- Grade!! -->
+                                <tr>
+                                    <th><xsl:value-of select="name()" /></th>
+                                    <td>
+                                        <table class="table_grade">
+                                            <tr class="tr_grade">
+                                            <xsl:for-each select="$grades/ListGrades/*">
+                                                <xsl:if test='$untrusted_grade=letter'>
+                                                    <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
+                                                </xsl:if>
+                                                <xsl:if test='$untrusted_grade!=letter'>
+                                                    <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
+                                                </xsl:if>
+                                            </xsl:for-each>
+                                            </tr >
+                                        </table>
+                                    </td>
+                                </tr>
+                            </xsl:when>
+                            <xsl:when test="name()='FutureGrade'">
+                                <xsl:variable name="future_grade" select="." />
+                                <!-- Grade!! -->
+                                <tr>
+                                    <th><xsl:value-of select="name()" /></th>
+                                    <td>
+                                        <table class="table_grade">
+                                            <tr class="tr_grade">
+                                            <xsl:for-each select="$grades/ListGrades/*">
+                                                <xsl:if test='$future_grade=letter'>
+                                                    <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
+                                                </xsl:if>
+                                                <xsl:if test='$future_grade!=letter'>
+                                                    <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
+                                                </xsl:if>
+                                            </xsl:for-each>
+                                            </tr >
+                                        </table>
+                                    </td>
+                                </tr>
+                            </xsl:when>
                             <xsl:when test="not(./*)">
                                 <!-- Singleton -->
                                 <tr>
@@ -144,16 +210,18 @@
                                 <tr>
                                     <th></th>
                                     <td colspan="2">
-                                        <div class="accepted_suites">
+                                        <table class="accepted_suites">
                                             <xsl:for-each select="./List[*]">
-                                                <span class="accepted_suites_name"><xsl:value-of select="Name" /></span>
-                                                &#160;<span class="content_name">CipherStrength : </span><span class="content_value"><xsl:value-of select="CipherStrength" /></span>
-                                                &#160;<span class="content_name">KxType : </span><span class="content_value"><xsl:value-of select="KxType" /></span>
-                                                &#160;<span class="content_name">KxStrength : </span><span class="content_value"><xsl:value-of select="KxStrength" /></span>
-                                                &#160;<span class="content_name">NamedGroupBits : </span><span class="content_value"><xsl:value-of select="NamedGroupBits" /></span>
-                                                <br/>
+                                            <tr>
+                                                <td class="accepted_suites_name"><span ><xsl:value-of select="Name" /></span></td>
+                                                <td class="accepted_suites_value"><span class="content_name">CipherStrength </span><span class="content_value"><xsl:value-of select="CipherStrength" /></span></td>
+                                                <td class="accepted_suites_value"><span class="content_name">KxType </span><span class="content_value"><xsl:value-of select="KxType" /></span></td>
+                                                <td class="accepted_suites_value"><span class="content_name">KxStrength </span><span class="content_value"><xsl:value-of select="KxStrength" /></span></td>
+                                                <td class="accepted_suites_value"><span class="content_name">NamedGroupBits </span><span class="content_value"><xsl:value-of select="NamedGroupBits" /></span></td>
+                                                <td class="accepted_suites_value"></td>
+                                            </tr>
                                             </xsl:for-each>
-                                        </div>                                    
+                                        </table>                                    
                                     </td>
                                 </tr>
                             </xsl:otherwise>
@@ -218,20 +286,23 @@
                                 <xsl:otherwise>
                                     <th class="simulation_OS"><xsl:value-of select="Client/Name" />&#160;<xsl:value-of select="Client/Platform" />&#160;<xsl:value-of select="Client/Version" />&#160;</th>
                                     <td>
-                                    <xsl:choose>
-                                        <xsl:when test="ErrorCode=0">
-                                            <xsl:value-of select="SuiteName" />&#160;KxType<xsl:value-of select="KxType" />
-                                            &#160;<span class="content_name">KxStrength : </span><span class="content_value"><xsl:value-of select="KxStrength" /></span>
-                                            &#160;<span class="content_name">NamedGroupBits : </span><span class="content_value"><xsl:value-of select="NamedGroupBits" /></span>
-                                            &#160;<span class="content_name">NamedGroupName : </span><span class="content_value"><xsl:value-of select="NamedGroupName" /></span>
-                                            &#160;<span class="content_name">KeyAlg : </span><span class="content_value"><xsl:value-of select="KeyAlg" /></span>
-                                            &#160;<span class="content_name">KeySize : </span><span class="content_value"><xsl:value-of select="KeySize" /></span>
-                                            &#160;<span class="content_name">SigAlg : </span><span class="content_value"><xsl:value-of select="SigAlg" /></span>
-                                        </xsl:when>
-                                        <xsl:otherwise>
-                                            <span class="content_light_error"><xsl:value-of select="ErrorMessage" /></span>
-                                        </xsl:otherwise>
-                                    </xsl:choose>
+                                        <table class="accepted_suites">
+                                            <tr>
+                                                <xsl:choose>
+                                                    <xsl:when test="ErrorCode=0">
+                                                        <td class="sim_os_suites_name"><xsl:value-of select="SuiteName" /></td>
+                                                        <td class="sim_os_suites_value"><span class="content_name">Key Type </span><span class="content_value"><xsl:value-of select="KxType" /> (<xsl:value-of select="KxStrength" /> bits)</span></td>
+                                                        <td class="sim_os_suites_value"><span class="content_name">NamedGroupBits </span><span class="content_value"><xsl:value-of select="NamedGroupBits" /></span></td>
+                                                        <td class="sim_os_suites_value"><span class="content_name">NamedGroup </span><span class="content_value"><xsl:value-of select="NamedGroupName" /></span></td>
+                                                        <td class="sim_os_suites_value"><span class="content_name">KeyAlg </span><span class="content_value"><xsl:value-of select="KeyAlg" /> (<xsl:value-of select="KeySize" /> bits)</span></td>
+                                                        <td class="accepted_suites_value"><span class="content_name">SigAlg </span><span class="content_value"><xsl:value-of select="SigAlg" /></span></td>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <td><span class="content_light_error"><xsl:value-of select="ErrorMessage" /></span></td>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </xsl:otherwise>
                             </xsl:choose>
@@ -244,6 +315,14 @@
                     </tr>
                     <xsl:for-each select="LabsReport/Endpoints/Details/*[.]">
                         <xsl:choose>
+                            <xsl:when test="(name()='HostStartTime')">
+                                    <th>Details/<xsl:value-of select="name()" /></th>
+                                    <td>
+                                        <xsl:call-template name="UnixTime-to-dateTime">
+                                          <xsl:with-param name="unixTime" select="."/>
+                                        </xsl:call-template>
+                                    </td>
+                            </xsl:when>
                             <xsl:when test="not(./*)">
                                 <!-- Singleton -->
                                 <tr>

@@ -6,7 +6,7 @@
 html > body { 
 	font-family: PT Sans, Roboto,Candara, Calibri, sans-serif;
   font-size: 11px;
-  width: 100%;
+  width: 98%;
 }
 
 .red { color: red; }
@@ -81,14 +81,19 @@ tr th {
 tr td, td {
   font-size: 1em;
   vertical-align: top;
+  word-break: break-all;
 }
 
 level1 {
   width: 80%
 }
 
+.full_table {
+    width: 98%;
+}
+
 .accepted_suites {
-    width:80%;
+    border-spacing: 0px;
 }
 
 .named_group {
@@ -97,6 +102,11 @@ level1 {
 
 .accepted_suites_name {
     color: green;
+    width: 25%;
+}
+.accepted_suites_value {
+    color: green;
+    width: 15%;
 }
 
 .simulation_header, .endpoint_detail_header, .certificates_header, .protocols_header {
@@ -117,6 +127,15 @@ level1 {
     font-weight: normal;
 }
 
+.sim_os_suites_name {
+    color: green;
+    width: 25%;
+}
+.sim_os_suites_value {
+    color: green;
+    width: 15%;
+}
+
 .content_name {
     color: DarkGray;
 }
@@ -126,5 +145,29 @@ level1 {
 }
 
 .content_light_error {
-    color: MistyRose;
+    color: #f69c41;
+}
+
+.current_grade {
+    width:10px;
+    vertical-align:middle;
+    text-align:center;
+    font-weight: bold;
+}
+
+.table_grade {
+    width: 120px;
+}
+
+.hidden_grade {
+    width:10px;
+    vertical-align:middle;
+    text-align:center;
+    opacity: 0.3;
+    font-weight: normal;
+}
+.tr_grade {
+    width:120px; 
+    border: 1px solid gray;
+    line-height:14px;
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListGrades>
+    <grade>
+        <letter>A</letter>
+        <background>#39ed39</background>
+    </grade>
+    <grade>
+        <letter>B</letter>
+        <background>#b5dc91</background>
+    </grade>
+    <grade>
+        <letter>C</letter>
+        <background>#ebe52c</background>
+    </grade>
+    <grade>
+        <letter>D</letter>
+        <background>#FFA500</background>
+    </grade>
+    <grade>
+        <letter>E</letter>
+        <background>#FF7F00</background>
+    </grade>
+    <grade>
+    <letter>F</letter>
+        <background>#FF0000</background>
+    </grade>
+</ListGrades>
