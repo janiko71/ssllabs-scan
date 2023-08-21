@@ -110,7 +110,14 @@ level1 {
 }
 
 .simulation_header, .endpoint_detail_header, .certificates_header, .protocols_header {
-    font-size: 1.4em;
+    font-size: 1.2em;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color:chocolate;
+}
+
+.host_header {
+    font-size: 1.6em;
     padding-top: 8px;
     padding-bottom: 8px;
     color:chocolate;
@@ -166,6 +173,7 @@ level1 {
     opacity: 0.3;
     font-weight: normal;
 }
+
 .tr_grade {
     width:120px; 
     border: 1px solid gray;

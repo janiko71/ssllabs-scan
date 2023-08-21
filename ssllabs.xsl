@@ -96,248 +96,247 @@
                     <!--h2>Endpoints</h2-->
                     
                     <tr>
-                        <th class="table_header" colspan="2">Endpoints information*</th><td></td>
+                        <th class="table_header" colspan="2">Endpoints information</th><td></td>
                     </tr>
-                    
+                        
                     <!-- Endpoints Information -->
-                    <xsl:for-each select="LabsReport/Endpoints/*[.]">
-                        <xsl:choose>
-                            <xsl:when test="name()='Grade'">
-                                <!-- Grade!! -->
-                                <xsl:variable name="current_grade" select="." />
-                                <tr>
-                                    <th><xsl:value-of select="name()" /></th>
-                                    <td>
-                                        <table class="table_grade">
-                                            <tr class="tr_grade">
-                                            <xsl:for-each select="$grades/ListGrades/*">
-                                                <xsl:if test='$current_grade=letter'>
-                                                    <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
-                                                </xsl:if>
-                                                <xsl:if test='$current_grade!=letter'>
-                                                    <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
-                                                </xsl:if>
-                                            </xsl:for-each>
-                                            </tr >
-                                        </table>
-                                    </td>
-                                </tr>
-                            </xsl:when>
-                            <xsl:when test="name()='GradeTrustIgnored'">
-                                <xsl:variable name="untrusted_grade" select="." />
-                                <!-- Grade!! -->
-                                <tr>
-                                    <th><xsl:value-of select="name()" /></th>
-                                    <td>
-                                        <table class="table_grade">
-                                            <tr class="tr_grade">
-                                            <xsl:for-each select="$grades/ListGrades/*">
-                                                <xsl:if test='$untrusted_grade=letter'>
-                                                    <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
-                                                </xsl:if>
-                                                <xsl:if test='$untrusted_grade!=letter'>
-                                                    <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
-                                                </xsl:if>
-                                            </xsl:for-each>
-                                            </tr >
-                                        </table>
-                                    </td>
-                                </tr>
-                            </xsl:when>
-                            <xsl:when test="name()='FutureGrade'">
-                                <xsl:variable name="future_grade" select="." />
-                                <!-- Grade!! -->
-                                <tr>
-                                    <th><xsl:value-of select="name()" /></th>
-                                    <td>
-                                        <table class="table_grade">
-                                            <tr class="tr_grade">
-                                            <xsl:for-each select="$grades/ListGrades/*">
-                                                <xsl:if test='$future_grade=letter'>
-                                                    <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
-                                                </xsl:if>
-                                                <xsl:if test='$future_grade!=letter'>
-                                                    <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
-                                                </xsl:if>
-                                            </xsl:for-each>
-                                            </tr >
-                                        </table>
-                                    </td>
-                                </tr>
-                            </xsl:when>
-                            <xsl:when test="not(./*)">
-                                <!-- Singleton -->
-                                <tr>
-                                    <th><xsl:value-of select="name()" /></th>
-                                    <td colspan="2"><xsl:value-of select="." /></td>
-                                </tr>
-                            </xsl:when>
-                            <xsl:otherwise>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:for-each>
-                    
-                    <!-- Endpoints Accepted Protocols -->
+                    <xsl:for-each select="LabsReport/Endpoints">
 
-                    <tr>
-                        <th class="protocols_header" colspan="2">Endpoint Accepted Protocols</th><td></td>
-                    </tr>
-                    <xsl:for-each select="LabsReport/Endpoints/Details/Protocols[*]">
-                        <xsl:choose>
-                            <xsl:when test="not(./*)">
-                                <!-- Singleton -->
-                                <!-- N/A -->
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <tr>
-                                    <th>Endpoints Accepted Protocols</th>
-                                    <td colspan="2">Protocol Id : <xsl:value-of select="Id" />&#160;<xsl:value-of select="Name" />&#160;<xsl:value-of select="Version" />&#160;V2disabled : <xsl:value-of select="V2SuitesDisabled" />&#160;Q : <xsl:value-of select="Q" /></td>
-                                </tr>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:for-each>
-    
-                    <!-- Endpoints Accepted Suites -->
-                    <xsl:variable name="eap_protocols" select="LabsReport/Endpoints/Details/Protocols"/>
-                    <xsl:for-each select="LabsReport/Endpoints/Details/Suites[*]">
-                        <xsl:choose>
-                            <xsl:when test="not(./*)">
-                                <!-- Singleton -->
-                                <!-- N/A -->
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <tr>
-                                    <th>Endpoints Accepted Suites</th>
-                                    <xsl:variable name="protocol_id" select="Protocol"/>
-                                    <td colspan="2"><xsl:value-of select="$eap_protocols[Id=$protocol_id]/Name" />&#160;<xsl:value-of select="$eap_protocols[Id=$protocol_id]/Version" /> (<xsl:value-of select="Protocol" />)&#160;HasPreference : <xsl:value-of select="Preference" /></td>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <td colspan="2">
-                                        <table class="accepted_suites">
-                                            <xsl:for-each select="./List[*]">
-                                            <tr>
-                                                <td class="accepted_suites_name"><span ><xsl:value-of select="Name" /></span></td>
-                                                <td class="accepted_suites_value"><span class="content_name">CipherStrength </span><span class="content_value"><xsl:value-of select="CipherStrength" /></span></td>
-                                                <td class="accepted_suites_value"><span class="content_name">KxType </span><span class="content_value"><xsl:value-of select="KxType" /></span></td>
-                                                <td class="accepted_suites_value"><span class="content_name">KxStrength </span><span class="content_value"><xsl:value-of select="KxStrength" /></span></td>
-                                                <td class="accepted_suites_value"><span class="content_name">NamedGroupBits </span><span class="content_value"><xsl:value-of select="NamedGroupBits" /></span></td>
-                                                <td class="accepted_suites_value"></td>
-                                            </tr>
-                                            </xsl:for-each>
-                                        </table>                                    
-                                    </td>
-                                </tr>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:for-each>
-    
-                    <!-- NoSniSuites -->
-                    <xsl:for-each select="LabsReport/Endpoints/Details/NoSniSuites[*]">
-                        <xsl:choose>
-                            <xsl:when test="not(./*)">
-                                <!-- Singleton -->
-                                <!-- N/A -->
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <tr>
-                                    <th>NoSniSuites</th>
-                                    <td colspan="2">Protocol : <xsl:value-of select="Protocol" /> Preference : <xsl:value-of select="Preference" /></td>
-                                </tr>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:for-each>
-                    
-                    <!-- NamedGroups -->
-                    <tr>
-                        <th>NamedGroups</th>
-                        <td colspan="2">
-                            <xsl:for-each select="LabsReport/Endpoints/Details/NamedGroups/*[*]">
-                                <xsl:choose>
-                                    <xsl:when test="not(./*)">
-                                        <!-- Singleton -->
-                                        <!-- N/A -->
-                                    </xsl:when>
-                                    <xsl:otherwise>
-                                        <span class="named_group"><xsl:value-of select="Name" /></span>&#160;<xsl:value-of select="Bits" />&#160;bits&#160;(Id : <xsl:value-of select="Id" />)<br/>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </xsl:for-each>
-                        </td>
-                    </tr>
-
-                    <!-- CertChains -->
-                    <tr>
-                        <th>CertChains</th>
-                        <td colspan="2">
-                            <xsl:for-each select="LabsReport/Endpoints/Details/CertChains/*">
-                                <xsl:value-of select="name()" /> : <xsl:value-of select="." /><br/>
-                            </xsl:for-each>
-                        </td>
-                    </tr>
-                    
-                    <!-- Simulations -->
-                    <tr>
-                        <th class="simulation_header" colspan="2">Simulation of negociation by OS</th><td></td>
-                    </tr>
-                    <xsl:for-each select="LabsReport/Endpoints/Details/Sims/*[*]">
                         <tr>
+                            <th class="host_header" colspan="2">Host information (<xsl:value-of select="IpAddress" />)</th><td></td>
+                        </tr>
+
+                        <xsl:for-each select="./*">
+                        
+                            <xsl:choose>
+                                <xsl:when test="name()='Grade'">
+                                    <!-- Grade!! -->
+                                    <xsl:variable name="current_grade" select="substring(./text(),1,1)" />
+                                    <tr>
+                                        <th><xsl:value-of select="name()" /></th>
+                                        <td>
+                                            <table class="table_grade">
+                                                <tr class="tr_grade">
+                                                <xsl:for-each select="$grades/ListGrades/*">
+                                                    <xsl:if test='$current_grade=letter'>
+                                                        <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
+                                                    </xsl:if>
+                                                    <xsl:if test='$current_grade!=letter'>
+                                                        <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
+                                                    </xsl:if>
+                                                </xsl:for-each>
+                                                </tr >
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </xsl:when>
+                                <xsl:when test="name()='GradeTrustIgnored'">
+                                    <xsl:variable name="untrusted_grade" select="." />
+                                    <!-- Grade!! -->
+                                    <tr>
+                                        <th><xsl:value-of select="name()" /></th>
+                                        <td>
+                                            <table class="table_grade">
+                                                <tr class="tr_grade">
+                                                <xsl:for-each select="$grades/ListGrades/*">
+                                                    <xsl:if test='$untrusted_grade=letter'>
+                                                        <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
+                                                    </xsl:if>
+                                                    <xsl:if test='$untrusted_grade!=letter'>
+                                                        <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
+                                                    </xsl:if>
+                                                </xsl:for-each>
+                                                </tr >
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </xsl:when>
+                                <xsl:when test="name()='FutureGrade'">
+                                    <xsl:variable name="future_grade" select="." />
+                                    <!-- Grade!! -->
+                                    <tr>
+                                        <th><xsl:value-of select="name()" /></th>
+                                        <td>
+                                            <table class="table_grade">
+                                                <tr class="tr_grade">
+                                                <xsl:for-each select="$grades/ListGrades/*">
+                                                    <xsl:if test='$future_grade=letter'>
+                                                        <td style='background:{background};' class="current_grade"><xsl:value-of select="letter" /></td>
+                                                    </xsl:if>
+                                                    <xsl:if test='$future_grade!=letter'>
+                                                        <td style='background:{background};' class="hidden_grade"><xsl:value-of select="letter" /></td>
+                                                    </xsl:if>
+                                                </xsl:for-each>
+                                                </tr >
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </xsl:when>
+                                <xsl:when test="not(./*)">
+                                    <!-- Singleton -->
+                                    <tr>
+                                        <th><xsl:value-of select="name()" /></th>
+                                        <td colspan="2"><xsl:value-of select="." /></td>
+                                    </tr>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
+
+    
+                        <!-- Endpoints Accepted Suites -->
+                        <xsl:variable name="eap_protocols" select="./Details/Protocols"/>
+                        <xsl:for-each select="./Details/Suites[*]">
                             <xsl:choose>
                                 <xsl:when test="not(./*)">
                                     <!-- Singleton -->
                                     <!-- N/A -->
                                 </xsl:when>
                                 <xsl:otherwise>
-                                    <th class="simulation_OS"><xsl:value-of select="Client/Name" />&#160;<xsl:value-of select="Client/Platform" />&#160;<xsl:value-of select="Client/Version" />&#160;</th>
-                                    <td>
-                                        <table class="accepted_suites">
-                                            <tr>
-                                                <xsl:choose>
-                                                    <xsl:when test="ErrorCode=0">
-                                                        <td class="sim_os_suites_name"><xsl:value-of select="SuiteName" /></td>
-                                                        <td class="sim_os_suites_value"><span class="content_name">Key Type </span><span class="content_value"><xsl:value-of select="KxType" /> (<xsl:value-of select="KxStrength" /> bits)</span></td>
-                                                        <td class="sim_os_suites_value"><span class="content_name">NamedGroupBits </span><span class="content_value"><xsl:value-of select="NamedGroupBits" /></span></td>
-                                                        <td class="sim_os_suites_value"><span class="content_name">NamedGroup </span><span class="content_value"><xsl:value-of select="NamedGroupName" /></span></td>
-                                                        <td class="sim_os_suites_value"><span class="content_name">KeyAlg </span><span class="content_value"><xsl:value-of select="KeyAlg" /> (<xsl:value-of select="KeySize" /> bits)</span></td>
-                                                        <td class="accepted_suites_value"><span class="content_name">SigAlg </span><span class="content_value"><xsl:value-of select="SigAlg" /></span></td>
-                                                    </xsl:when>
-                                                    <xsl:otherwise>
-                                                        <td><span class="content_light_error"><xsl:value-of select="ErrorMessage" /></span></td>
-                                                    </xsl:otherwise>
-                                                </xsl:choose>
-                                            </tr>
-                                        </table>
-                                    </td>
+                                    <tr>
+                                        <th>Endpoints Accepted Suites</th>
+                                        <xsl:variable name="protocol_id" select="Protocol"/>
+                                        <td colspan="2"><xsl:value-of select="$eap_protocols[Id=$protocol_id]/Name" />&#160;<xsl:value-of select="$eap_protocols[Id=$protocol_id]/Version" /> (<xsl:value-of select="Protocol" />)&#160;HasPreference : <xsl:value-of select="Preference" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <td colspan="2">
+                                            <table class="accepted_suites">
+                                                <xsl:for-each select="./List[*]">
+                                                <tr>
+                                                    <td class="accepted_suites_name"><span ><xsl:value-of select="Name" /></span></td>
+                                                    <td class="accepted_suites_value"><span class="content_name">CipherStrength </span><span class="content_value"><xsl:value-of select="CipherStrength" /></span></td>
+                                                    <td class="accepted_suites_value"><span class="content_name">KxType </span><span class="content_value"><xsl:value-of select="KxType" /></span></td>
+                                                    <td class="accepted_suites_value"><span class="content_name">KxStrength </span><span class="content_value"><xsl:value-of select="KxStrength" /></span></td>
+                                                    <td class="accepted_suites_value"><span class="content_name">NamedGroupBits </span><span class="content_value"><xsl:value-of select="NamedGroupBits" /></span></td>
+                                                    <td class="accepted_suites_value"></td>
+                                                </tr>
+                                                </xsl:for-each>
+                                            </table>                                    
+                                        </td>
+                                    </tr>
                                 </xsl:otherwise>
                             </xsl:choose>
+                        </xsl:for-each>
+    
+                        <!-- NoSniSuites -->
+                        <xsl:for-each select="./Details/NoSniSuites[*]">
+                            <xsl:choose>
+                                <xsl:when test="not(./*)">
+                                    <!-- Singleton -->
+                                    <!-- N/A -->
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <tr>
+                                        <th>NoSniSuites</th>
+                                        <td colspan="2">Protocol : <xsl:value-of select="Protocol" /> Preference : <xsl:value-of select="Preference" /></td>
+                                    </tr>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
+                    
+                        <!-- NamedGroups -->
+                        <tr>
+                            <th>NamedGroups</th>
+                            <td colspan="2">
+                                <xsl:for-each select="./Details/NamedGroups/*[*]">
+                                    <xsl:choose>
+                                        <xsl:when test="not(./*)">
+                                            <!-- Singleton -->
+                                            <!-- N/A -->
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <span class="named_group"><xsl:value-of select="Name" /></span>&#160;<xsl:value-of select="Bits" />&#160;bits&#160;(Id : <xsl:value-of select="Id" />)<br/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:for-each>
+                            </td>
                         </tr>
+
+                        <!-- CertChains -->
+                        <tr>
+                            <th>CertChains</th>
+                            <td colspan="2">
+                                <xsl:for-each select="./Details/CertChains/*">
+                                    <xsl:value-of select="name()" /> : <xsl:value-of select="." /><br/>
+                                </xsl:for-each>
+                            </td>
+                        </tr>
+
+                        <!-- Simulations -->
+                        <tr>
+                            <th class="simulation_header" colspan="2">Simulation of negociation by OS</th><td></td>
+                        </tr>
+                        <xsl:for-each select="./Details/Sims/*[*]">
+                            <tr>
+                                <xsl:choose>
+                                    <xsl:when test="not(./*)">
+                                        <!-- Singleton -->
+                                        <!-- N/A -->
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <th class="simulation_OS"><xsl:value-of select="Client/Name" />&#160;<xsl:value-of select="Client/Platform" />&#160;<xsl:value-of select="Client/Version" />&#160;</th>
+                                        <td>
+                                            <table class="accepted_suites">
+                                                <tr>
+                                                    <xsl:choose>
+                                                        <xsl:when test="ErrorCode=0">
+                                                            <td class="sim_os_suites_name"><xsl:value-of select="SuiteName" /></td>
+                                                            <td class="sim_os_suites_value"><span class="content_name">Key Type </span><span class="content_value"><xsl:value-of select="KxType" /> (<xsl:value-of select="KxStrength" /> bits)</span></td>
+                                                            <td class="sim_os_suites_value"><span class="content_name">NamedGroupBits </span><span class="content_value"><xsl:value-of select="NamedGroupBits" /></span></td>
+                                                            <td class="sim_os_suites_value"><span class="content_name">NamedGroup </span><span class="content_value"><xsl:value-of select="NamedGroupName" /></span></td>
+                                                            <td class="sim_os_suites_value"><span class="content_name">KeyAlg </span><span class="content_value"><xsl:value-of select="KeyAlg" /> (<xsl:value-of select="KeySize" /> bits)</span></td>
+                                                            <td class="accepted_suites_value"><span class="content_name">SigAlg </span><span class="content_value"><xsl:value-of select="SigAlg" /></span></td>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <td><span class="content_light_error"><xsl:value-of select="ErrorMessage" /></span></td>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </tr>
+                        </xsl:for-each>
+
+                        <!-- Endpoint Details -->
+                        <tr>
+                            <th class="endpoint_detail_header" colspan="2">Host details</th><td></td>
+                        </tr>
+                        <xsl:for-each select="./Details/*[.]">
+                            <xsl:choose>
+                                <xsl:when test="(name()='HostStartTime')">
+                                        <th>Details/<xsl:value-of select="name()" /></th>
+                                        <td>
+                                            <xsl:call-template name="UnixTime-to-dateTime">
+                                              <xsl:with-param name="unixTime" select="."/>
+                                            </xsl:call-template>
+                                        </td>
+                                </xsl:when>
+                                <xsl:when test="not(./*)">
+                                    <!-- Singleton -->
+                                    <tr>
+                                        <th>Details/<xsl:value-of select="name()" /></th>
+                                        <td><xsl:value-of select="." /></td>
+                                    </tr>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:for-each>
+                    
+                        <!-- End Endpoints loop -->
+                            
                     </xsl:for-each>
 
-                    <!-- Endpoint Details -->
-                    <tr>
-                        <th class="endpoint_detail_header" colspan="2">Endpoint details</th><td></td>
-                    </tr>
-                    <xsl:for-each select="LabsReport/Endpoints/Details/*[.]">
-                        <xsl:choose>
-                            <xsl:when test="(name()='HostStartTime')">
-                                    <th>Details/<xsl:value-of select="name()" /></th>
-                                    <td>
-                                        <xsl:call-template name="UnixTime-to-dateTime">
-                                          <xsl:with-param name="unixTime" select="."/>
-                                        </xsl:call-template>
-                                    </td>
-                            </xsl:when>
-                            <xsl:when test="not(./*)">
-                                <!-- Singleton -->
-                                <tr>
-                                    <th>Details/<xsl:value-of select="name()" /></th>
-                                    <td><xsl:value-of select="." /></td>
-                                </tr>
-                            </xsl:when>
-                            <xsl:otherwise>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:for-each>
+    
+
+
+
+
+
     
                     <!--h2>Certificates</h2-->
                     <tr>
